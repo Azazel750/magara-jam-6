@@ -178,7 +178,7 @@ namespace AOC
             DisposeState();
             CurrentState = state;
             CurrentState.timeLeft = 0;
-            lastStartCoroutine = agent.isActiveAndEnabled ? agent.StartCoroutine(state.Start()) : null;
+            lastStartCoroutine = agent is { isActiveAndEnabled: true } ? agent.StartCoroutine(state.Start()) : null;
         }
 
         private void InitState(State state)
