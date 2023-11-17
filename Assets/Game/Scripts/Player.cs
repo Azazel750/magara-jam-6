@@ -13,12 +13,13 @@ public class Player : Human
     private Vector3 inputVectorNormalized;
     public static Player Instance { get; private set; }
 
-    public static Vector3 position => Instance.transform.position;
+    public static Vector3 position => Instance == null ? Vector3.zero : Instance.transform.position;
     
     public float velocitySmoothTime;
 
-    private void Start()
+    public override void Awake()
     {
+        base.Awake();
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
     }
