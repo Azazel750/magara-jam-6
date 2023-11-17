@@ -35,10 +35,16 @@ public class Enemy : Alive
     {
         if(direction.magnitude > 0.1f) rb.velocity = direction.normalized;
         direction = Vector3.zero;
+
     }
 
     public void MakeForward(Vector3 currentWaypointVector)
     {
         direction = currentWaypointVector;
+    }
+
+    public void Kill()
+    {
+        Destroy(gameObject);
     }
 }
