@@ -1,27 +1,44 @@
+using System;
+using AOC;
+using Enemy_States;
 using Pathfinding;
 using UnityEngine;
 
 public class Enemy : Alive
 {
+    public Rigidbody rb;
+    
+    [HideInInspector] public Vector3 direction;
     private Transform target;
     IAstarAI ai;
+    private StateManager _stateManager;
+
+    private void Start()
+    {
+        _stateManager = new StateManager(this);
+        _stateManager.Begin<IdleState>();
+    }
 
     void OnEnable () {
         ai = GetComponent<IAstarAI>();
         target = GameManager.GetClosest<Human>(this).transform;
-        // Update the destination right before searching for a path as well.
-        // This is enough in theory, but this script will also update the destination every
-        // frame as the destination is used for debugging and may be used for other things by other
-        // scripts as well. So it makes sense that it is up to date every frame.
+        
         if (ai != null) ai.onSearchPath += Update;
     }
 
     void OnDisable () {
-        if (ai != null) ai.onSearchPath -= Update;
+        
     }
 
     /// <summary>Updates the AI's destination every frame</summary>
-    void Update () {
-        if (target != null && ai != null) ai.destination = target.position;
+    void Update ()
+    {
+        if(direction.magnitude > 0.1f) rb.velocity = direction.normalized;
+        direction = Vector3.zero;
+    }
+
+    public void MakeForward(Vector3 currentWaypointVector)
+    {
+        direction = currentWaypointVector;
     }
 }

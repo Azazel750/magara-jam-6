@@ -81,3 +81,24 @@ public class ForceProtectedSingleton<T> : ExpandedBehaviour where T : ExpandedBe
         set => _instance = value;
     }
 }
+
+[DisallowMultipleComponent]
+public class ForceProtectedSingletonDontDestroy<T> : ExpandedBehaviour where T : ExpandedBehaviour
+{
+    private static T _instance;
+
+    protected static T Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<T>(true);
+                DontDestroyOnLoad(_instance.gameObject);
+                if (_instance == null) _instance = new GameObject(typeof(T).Name + " (Force created)").AddComponent<T>();
+            }
+            return _instance;
+        }
+        set => _instance = value;
+    }
+}
