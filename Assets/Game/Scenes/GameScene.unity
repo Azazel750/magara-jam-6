@@ -1016,8 +1016,8 @@ MonoBehaviour:
   rigidbody: {fileID: 1236399441}
   speed: 10
   dashMultiplier: 2
-  moveDirectionSmoothTime: 0.1
-  velocitySmoothTime: 3
+  moveDirectionSmoothTime: 0
+  velocitySmoothTime: 12
 --- !u!1001 &1372628533
 PrefabInstance:
   m_ObjectHideFlags: 0
