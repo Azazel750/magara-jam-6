@@ -120,7 +120,6 @@ GameObject:
   - component: {fileID: 8750298628530158178}
   - component: {fileID: 62151367187345231}
   - component: {fileID: 5772503822776819311}
-  - component: {fileID: 7744678300976397846}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -217,42 +216,6 @@ MonoBehaviour:
   mouseSensitivity: 1.3
   playerBody: {fileID: 6124629600621313523}
   rotationSmoothTime: 0.1
---- !u!114 &7744678300976397846
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4948429717314289143}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1949d0e11424ded97b0496759a7b7e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  debuggingSettings:
-    messageDebugging: 1
-    warningDebugging: 1
-    errorDebugging: 1
-    drawDebugging: 1
-  collectionTag: NOK_Agent
-  cullingProperties:
-    layers:
-      serializedVersion: 2
-      m_Bits: 64
-    areaCulling: 1
-    distanceCulling: 1
-    limitCulling: 1
-    raycastCulling: 0
-    raycastShift: 1
-    loopInterval: 100
-    maxActiveLimit: 200
-  cullingArea:
-    distance: 0
-    radius: 23.8
-    color: {r: 0, g: 1, b: 0.0062048435, a: 1}
-  cullingPool:
-    poolDebug:
-      allTransforms: []
 --- !u!1 &8700973454299495533
 GameObject:
   m_ObjectHideFlags: 0
