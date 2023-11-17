@@ -14,10 +14,10 @@ public class GameManager : Singleton<GameManager>
 
     public static Alive GetClosest<T>(Alive to)
     {
-        return alives
+        var available = alives
             .FindAll(x => x is T)
             .OrderBy(x =>
-                Vector3.Distance(x.transform.position, to.transform.position))
-            .First();
+                Vector3.Distance(x.transform.position, to.transform.position));
+        return !available.Any() ? null : available.First();
     }
 }

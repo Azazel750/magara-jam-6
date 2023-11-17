@@ -40,7 +40,7 @@ namespace Enemy_States
 
         public override void Awake()
         {
-            Debug.Log(agent);
+            Debug.Log("Hello world");
             seeker = agent.GetComponent<Seeker>();
         }
 
