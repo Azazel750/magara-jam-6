@@ -44,7 +44,7 @@ public class Player : Human
             Quaternion.LookRotation(rigidbody.velocity), 
             Time.deltaTime * 15);
         
-        if(Input.GetKeyDown(KeyCode.C)) rigidbody.AddForce(inputVectorNormalized * (speed * dashMultiplier), ForceMode.Impulse);
+        if(Input.GetKeyDown(KeyCode.Space)) rigidbody.AddForce(inputVectorNormalized * (speed * dashMultiplier), ForceMode.Impulse);
     }
 
     public void FightMode(bool state)
@@ -60,7 +60,6 @@ public class Player : Human
 
     private void Move(Vector3 direction)
     {
-        
         rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, direction * speed, Time.fixedDeltaTime * velocitySmoothTime);
     }
 
