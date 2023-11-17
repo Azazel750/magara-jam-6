@@ -6,6 +6,7 @@ public class Player : Human
     public new Rigidbody rigidbody;
     public float speed = 2;
     public float dashMultiplier = 2;
+    public float attackDashMultiplier = 2;
     public float moveDirectionSmoothTime = 1;
     public float fightTimeSeconds = 0.5f;
     private float timeLeftFight = 0;
@@ -44,13 +45,19 @@ public class Player : Human
             Quaternion.LookRotation(rigidbody.velocity), 
             Time.deltaTime * 15);
         
-        if(Input.GetKeyDown(KeyCode.Space)) rigidbody.AddForce(inputVectorNormalized * (speed * dashMultiplier), ForceMode.Impulse);
+        if(Input.GetKeyDown(KeyCode.Space)) DashTo(dashMultiplier);
+    }
+
+    public void DashTo(float multiplier)
+    {
+        rigidbody.AddForce(inputVectorNormalized * (speed * multiplier), ForceMode.Impulse);
     }
 
     public void FightMode(bool state)
     {
         isFighting = state;
         timeLeftFight = 0;
+        if(state) DashTo(attackDashMultiplier);
     }
 
     private void FixedUpdate()
