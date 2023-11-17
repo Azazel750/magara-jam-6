@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Purple One
+  m_Name: Orange
   m_Shader: {fileID: -6465566751694194690, guid: 412a66d9979b8f84fa9cbd5db0ebe37f,
     type: 3}
   m_Parent: {fileID: 0}
@@ -83,7 +83,7 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _MainColor: {r: 1, g: 0.06132076, b: 0.06132076, a: 0}
+    - _MainColor: {r: 1, g: 0.686268, b: 0.062745094, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &1268262140208269396
 MonoBehaviour:
