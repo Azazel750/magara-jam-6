@@ -20,16 +20,14 @@ namespace Enemy_States
 
         public override void Update()
         {
-           
         }
 
         public override void Stop()
         {
-            
         }
     }
 
-        public class MoveState : State<IdleState, Enemy>
+    public class MoveState : State<IdleState, Enemy>
     {
         private Path path;
         private Seeker seeker;
@@ -55,6 +53,7 @@ namespace Enemy_States
                     DisposeState();
                     yield break;
                 }
+
                 seeker.StartPath(transform.position, position, OnPathComplete);
                 yield return new WaitForSeconds(1);
             }

@@ -7,6 +7,8 @@ using UnityEngine;
 public class Player : Human
 {
     public new Rigidbody rigidbody;
+    public bool canMove = true;
+    public GameObject actionPanel;
     public GameObject damageTextPrefab;
     public float speed = 2;
     public float dashMultiplier = 2;
@@ -34,23 +36,37 @@ public class Player : Human
 
     private void Update()
     {
+        if (!canMove)
+        {
+            actionPanel.SetActive(false);
+            return;
+        }
         var closest = GameManager
             .alives
             .OrderBy(x => x ? Vector3.Distance(x.transform.position, transform.position) : 9999);;
 
         var available = closest.ToList().Find(x => x && x is Enemy 
-                                                   && Vector3.Distance(x.transform.position, transform.position) < 1);
+                                                   && Vector3.Distance(x.transform.position, transform.position) < 3);
 
-        if (available is Human human)
+        if (available is Alive human)
         {
-            if (Input.GetKeyDown(KeyCode.F))
+            npcDialogue = human.GetComponent<DialogueTreeController>();
+            if (npcDialogue.graph.primeNode != null)
             {
-                Debug.Log("merhaba");
-                npcDialogue = human.GetComponent<DialogueTreeController>();
-                npcDialogue.StartDialogue(npcDialogue);
+                actionPanel.SetActive(true);
+                if (Input.GetKeyDown(KeyCode.F))
+                {
+                    canMove = false;
+                    npcDialogue.StartDialogue(npcDialogue, b =>
+                    {
+                        canMove = true;
+                    });
+                }
             }
+
            
         }
+        else actionPanel.SetActive(false);
 
         timeLeftFight += Time.deltaTime;
         if (timeLeftFight >= fightTimeSeconds)
@@ -86,6 +102,11 @@ public class Player : Human
 
     private void FixedUpdate()
     {
+        if (!canMove)
+        {
+            rigidbody.velocity = Vector3.zero;
+            return;
+        }
         Move(inputVectorNormalized);
     }
 
@@ -115,5 +136,11 @@ public class Player : Human
     public void OnStageBackTrigger(Collider other)
     {
         StageManager.Instance.Back();
+    }
+
+    public void Damage(float enemyDamage)
+    {
+        Debug.Log("WOooa");
+        Health -= enemyDamage;
     }
 }

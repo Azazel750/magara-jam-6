@@ -1,14 +1,17 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine.EventSystems;
+using Random = UnityEngine.Random;
 
 namespace NodeCanvas.DialogueTrees.UI.Examples
 {
 
-    public class DialogueUGUI : MonoBehaviour, IPointerClickHandler
+    public class DialogueGUI : MonoBehaviour, IPointerClickHandler
     {
 
         [System.Serializable]
@@ -28,10 +31,8 @@ namespace NodeCanvas.DialogueTrees.UI.Examples
         //Group...
         [Header("Subtitles")]
         public RectTransform subtitlesGroup;
-        public Text actorSpeech;
-        public Text actorName;
-        public Image actorPortrait;
-        public RectTransform waitInputIndicator;
+        public TextMeshProUGUI actorSpeech;
+        public TextMeshProUGUI actorName;
         public SubtitleDelays subtitleDelays = new SubtitleDelays();
         public List<AudioClip> typingSounds;
         private AudioSource playSource;
@@ -40,7 +41,7 @@ namespace NodeCanvas.DialogueTrees.UI.Examples
         [Header("Multiple Choice")]
         public RectTransform optionsGroup;
         public Button optionButton;
-        private Dictionary<Button, int> cachedButtons;
+        public List<Button> buttons;
         private Vector2 originalSubsPosition;
         private bool isWaitingChoice;
 
@@ -55,9 +56,31 @@ namespace NodeCanvas.DialogueTrees.UI.Examples
         void LateUpdate() => anyKeyDown = false;
 
 
-        void Awake() { Subscribe(); Hide(); }
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                currentTree.Stop();
+            }
+        }
+
+        void Awake() 
+        { 
+            Subscribe();
+            Hide();
+        }
+        
+        private void Show()
+        {
+            gameObject.SetActive(true);
+        }
+
+        private void Hide()
+        {
+            gameObject.SetActive(false);
+        }
+
         void OnEnable() { UnSubscribe(); Subscribe(); }
-        void OnDisable() { UnSubscribe(); }
 
         void Subscribe() {
             DialogueTree.OnDialogueStarted += OnDialogueStarted;
@@ -65,6 +88,23 @@ namespace NodeCanvas.DialogueTrees.UI.Examples
             DialogueTree.OnDialogueFinished += OnDialogueFinished;
             DialogueTree.OnSubtitlesRequest += OnSubtitlesRequest;
             DialogueTree.OnMultipleChoiceRequest += OnMultipleChoiceRequest;
+        }
+
+        private void OnMultipleChoiceRequest(MultipleChoiceRequestInfo obj)
+        {
+            SetButtonsActive(false);
+
+            var f = 0;
+            foreach (var pair in obj.options)
+            {
+                var btn = buttons[f];
+                btn.gameObject.SetActive(true);
+                btn.onClick.RemoveAllListeners();
+                btn.GetComponentInChildren<TextMeshProUGUI>().text = pair.Key.text;
+                var index = f;
+                btn.onClick.AddListener(() => { Finalize(obj, index); });
+                f++;
+            }
         }
 
         void UnSubscribe() {
@@ -75,38 +115,21 @@ namespace NodeCanvas.DialogueTrees.UI.Examples
             DialogueTree.OnMultipleChoiceRequest -= OnMultipleChoiceRequest;
         }
 
-        void Hide() {
-            subtitlesGroup.gameObject.SetActive(false);
-            optionsGroup.gameObject.SetActive(false);
-            optionButton.gameObject.SetActive(false);
-            waitInputIndicator.gameObject.SetActive(false);
-            originalSubsPosition = subtitlesGroup.transform.position;
-        }
-
+        private DialogueTree currentTree;
         void OnDialogueStarted(DialogueTree dlg) {
-            //nothing special...
+            Show();
+            currentTree = dlg;
         }
 
         void OnDialoguePaused(DialogueTree dlg) {
-            subtitlesGroup.gameObject.SetActive(false);
-            optionsGroup.gameObject.SetActive(false);
             StopAllCoroutines();
             if ( playSource != null ) playSource.Stop();
         }
 
         void OnDialogueFinished(DialogueTree dlg) {
-            subtitlesGroup.gameObject.SetActive(false);
-            optionsGroup.gameObject.SetActive(false);
-            if ( cachedButtons != null ) {
-                foreach ( var tempBtn in cachedButtons.Keys ) {
-                    if ( tempBtn != null ) {
-                        Destroy(tempBtn.gameObject);
-                    }
-                }
-                cachedButtons = null;
-            }
-            StopAllCoroutines();
             if ( playSource != null ) playSource.Stop();
+            StopAllCoroutines();
+            gameObject.SetActive(false);
         }
 
         ///----------------------------------------------------------------------------------------------
@@ -120,16 +143,12 @@ namespace NodeCanvas.DialogueTrees.UI.Examples
             var text = info.statement.text;
             var audio = info.statement.audio;
             var actor = info.actor;
-
-            subtitlesGroup.gameObject.SetActive(true);
-            subtitlesGroup.position = originalSubsPosition;
             actorSpeech.text = "";
 
             actorName.text = actor.name;
             actorSpeech.color = actor.dialogueColor;
-
-            actorPortrait.gameObject.SetActive(actor.portraitSprite != null);
-            actorPortrait.sprite = actor.portraitSprite;
+            
+            info.Continue();
 
             if ( audio != null ) {
                 var actorSource = actor.transform != null ? actor.transform.GetComponent<AudioSource>() : null;
@@ -150,10 +169,7 @@ namespace NodeCanvas.DialogueTrees.UI.Examples
 
             if ( audio == null ) {
                 var tempText = "";
-                var inputDown = false;
-                if ( skipOnInput ) {
-                    StartCoroutine(CheckInput(() => { inputDown = true; }));
-                }
+                var inputDown = true;
 
                 for ( int i = 0; i < text.Length; i++ ) {
 
@@ -182,23 +198,16 @@ namespace NodeCanvas.DialogueTrees.UI.Examples
 
                     actorSpeech.text = tempText;
                 }
-
-                if ( !waitForInput ) {
-                    yield return StartCoroutine(DelayPrint(subtitleDelays.finalDelay));
-                }
             }
 
             if ( waitForInput ) {
-                waitInputIndicator.gameObject.SetActive(true);
                 while ( !anyKeyDown ) {
                     yield return null;
                 }
-                waitInputIndicator.gameObject.SetActive(false);
             }
 
             yield return null;
-            subtitlesGroup.gameObject.SetActive(false);
-            info.Continue();
+            
         }
 
         void PlayTypeSound() {
@@ -209,14 +218,7 @@ namespace NodeCanvas.DialogueTrees.UI.Examples
                 }
             }
         }
-
-        IEnumerator CheckInput(System.Action Do) {
-            while ( !anyKeyDown ) {
-                yield return null;
-            }
-            Do();
-        }
-
+        
         IEnumerator DelayPrint(float time) {
             var timer = 0f;
             while ( timer < time ) {
@@ -226,48 +228,17 @@ namespace NodeCanvas.DialogueTrees.UI.Examples
         }
 
         ///----------------------------------------------------------------------------------------------
-
-        void OnMultipleChoiceRequest(MultipleChoiceRequestInfo info) 
-        {
-
-            optionsGroup.gameObject.SetActive(true);
-            var buttonHeight = optionButton.GetComponent<RectTransform>().rect.height;
-            optionsGroup.sizeDelta = new Vector2(optionsGroup.sizeDelta.x, ( info.options.Values.Count * buttonHeight ) + 20);
-
-            cachedButtons = new Dictionary<Button, int>();
-            int i = 0;
-
-            foreach ( KeyValuePair<IStatement, int> pair in info.options ) {
-                var btn = (Button)Instantiate(optionButton);
-                btn.gameObject.SetActive(true);
-                btn.transform.SetParent(optionsGroup.transform, false);
-                btn.transform.localPosition = (Vector3)optionButton.transform.localPosition - new Vector3(0, buttonHeight * i, 0);
-                btn.GetComponentInChildren<Text>().text = pair.Key.text;
-                cachedButtons.Add(btn, pair.Value);
-                btn.onClick.AddListener(() => { Finalize(info, cachedButtons[btn]); });
-                i++;
-            }
-
-            if ( info.showLastStatement ) {
-                subtitlesGroup.gameObject.SetActive(true);
-                var newY = optionsGroup.position.y + optionsGroup.sizeDelta.y + 1;
-                subtitlesGroup.position = new Vector3(subtitlesGroup.position.x, newY, subtitlesGroup.position.z);
-            }
-
-            if ( info.availableTime > 0 ) {
-                StartCoroutine(CountDown(info));
-            }
-        }
-
+        
         IEnumerator CountDown(MultipleChoiceRequestInfo info) {
             isWaitingChoice = true;
             var timer = 0f;
-            while ( timer < info.availableTime ) {
-                if ( isWaitingChoice == false ) {
+            while ( timer < info.availableTime ) 
+            {
+                if (!isWaitingChoice) 
+                {
                     yield break;
                 }
                 timer += Time.deltaTime;
-                SetMassAlpha(optionsGroup, Mathf.Lerp(1, 0, timer / info.availableTime));
                 yield return null;
             }
 
@@ -278,18 +249,15 @@ namespace NodeCanvas.DialogueTrees.UI.Examples
 
         void Finalize(MultipleChoiceRequestInfo info, int index) {
             isWaitingChoice = false;
-            SetMassAlpha(optionsGroup, 1f);
-            optionsGroup.gameObject.SetActive(false);
-            subtitlesGroup.gameObject.SetActive(false);
-            foreach ( var tempBtn in cachedButtons.Keys ) {
-                Destroy(tempBtn.gameObject);
-            }
+
             info.SelectOption(index);
         }
 
-        void SetMassAlpha(RectTransform root, float alpha) {
-            foreach ( var graphic in root.GetComponentsInChildren<CanvasRenderer>() ) {
-                graphic.SetAlpha(alpha);
+        public void SetButtonsActive(bool active)
+        {
+            foreach (var button in buttons)  
+            {
+                button.gameObject.SetActive(active);
             }
         }
     }

@@ -6,8 +6,9 @@ using UnityEngine;
 
 public class Enemy : Alive
 {
+    public float enemyDamage = 10;
     public Rigidbody rb;
-    
+    public float speed = 0.1f;
     [HideInInspector] public Vector3 direction;
     private Transform target;
     IAstarAI ai;
@@ -36,6 +37,22 @@ public class Enemy : Alive
         if (ai != null) ai.onSearchPath += Update;
     }
 
+    private void OnCollisionStay(Collision other)
+    {
+        if (other.collider.CompareTag("Player"))
+        {
+            PlayerCollision(other);
+        }
+    }
+
+    private void PlayerCollision(Collision other)
+    {
+        if (other.collider.TryGetComponent<Player>(out var player))
+        {
+            player.Damage(enemyDamage);
+        }
+    }
+
     void OnDisable () {
         
     }
@@ -43,7 +60,7 @@ public class Enemy : Alive
     /// <summary>Updates the AI's destination every frame</summary>
     void Update ()
     {
-        if(direction.magnitude > 0.1f) rb.velocity = direction.normalized;
+        if(direction.magnitude > 0.1f) rb.velocity = direction.normalized * speed;
         direction = Vector3.zero;
 
     }

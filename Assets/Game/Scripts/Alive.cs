@@ -17,7 +17,7 @@ public class Alive : MonoBehaviour
     }
 
     public event Action<float, float> OnHealthChanged;
-    private float health;
+    private float health = 100;
     public virtual void Awake()
     {
         GameManager.AddAlive(this);
