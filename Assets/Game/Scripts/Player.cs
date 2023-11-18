@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NodeCanvas.DialogueTrees;
+using System;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -14,6 +15,7 @@ public class Player : Human
     public float fightTimeSeconds = 0.5f;
     private float timeLeftFight = 0;
     private Vector3 inputVectorNormalized;
+    private DialogueTreeController npcDialogue;
     public static Player Instance { get; private set; }
 
     public static Vector3 position => Instance == null ? Vector3.zero : Instance.transform.position;
@@ -41,7 +43,12 @@ public class Player : Human
 
         if (available is Human human)
         {
-            
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                npcDialogue = human.GetComponent<DialogueTreeController>();
+                npcDialogue.StartDialogue();
+            }
+           
         }
 
         timeLeftFight += Time.deltaTime;
