@@ -3398,6 +3398,11 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8880061441451223816, guid: 7be645feea875be48a40872474fcfc29,
+        type: 3}
+      propertyPath: damageForceMultiplier
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 9120324915485032671, guid: 7be645feea875be48a40872474fcfc29,
         type: 3}
       propertyPath: m_TagString

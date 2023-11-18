@@ -20,8 +20,13 @@ public class Enemy : Alive
 
         OnHealthChanged += (last, next) =>
         {
-            if(next <= 0) 
+            if (next <= 0) Die();
         };
+    }
+
+    private void Die()
+    {
+        Destroy(gameObject);
     }
 
     void OnEnable () {
@@ -52,9 +57,12 @@ public class Enemy : Alive
     {
         Destroy(gameObject);
     }
+    
+    public float damageForceMultiplier;
 
-    public void Damage(int damage)
+    public void Damage(int damage, Vector3 damageDirection)
     {
         Health -= damage;
+        rb.AddForce(damageDirection * damageForceMultiplier, ForceMode.Impulse);
     }
 }

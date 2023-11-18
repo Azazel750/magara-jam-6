@@ -96,7 +96,7 @@ public class Player : Human
         var damage = 23;
         var go = Instantiate(damageTextPrefab, enemy.transform.position, Quaternion.identity);
         go.GetComponentInChildren<TMP_Text>().text = damage.ToString();
-        enemy.Damage(damage);
+        enemy.Damage(damage, enemy.transform.position - transform.position);
     }
 
     public void OnStageNextTrigger(Collider other)
