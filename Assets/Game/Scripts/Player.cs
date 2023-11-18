@@ -37,8 +37,10 @@ public class Player : Human
 
     private void Update()
     {
+
         if (!canMove)
         {
+            animator.SetFloat("Speed", 0);
             actionPanel.SetActive(false);
             return;
         }
@@ -113,6 +115,8 @@ public class Player : Human
 
     private void Move(Vector3 direction)
     {
+        animator.SetFloat("Speed", 
+            Mathf.MoveTowards(animator.GetFloat("Speed"), direction.magnitude > 0.1f ? 1 : 0, Time.deltaTime * 6));
         rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, direction * speed, Time.fixedDeltaTime * velocitySmoothTime);
     }
 
