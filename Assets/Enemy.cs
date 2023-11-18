@@ -17,6 +17,16 @@ public class Enemy : Alive
     {
         _stateManager = new StateManager(this);
         _stateManager.Begin<IdleState>();
+
+        OnHealthChanged += (last, next) =>
+        {
+            if (next <= 0) Die();
+        };
+    }
+
+    private void Die()
+    {
+        Destroy(gameObject);
     }
 
     void OnEnable () {
@@ -46,5 +56,13 @@ public class Enemy : Alive
     public void Kill()
     {
         Destroy(gameObject);
+    }
+    
+    public float damageForceMultiplier;
+
+    public void Damage(int damage, Vector3 damageDirection)
+    {
+        Health -= damage;
+        rb.AddForce(damageDirection * damageForceMultiplier, ForceMode.Impulse);
     }
 }

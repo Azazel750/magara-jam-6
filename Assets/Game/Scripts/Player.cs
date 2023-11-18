@@ -1,9 +1,13 @@
-﻿using System;
+﻿using NodeCanvas.DialogueTrees;
+using System;
+using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class Player : Human
 {
     public new Rigidbody rigidbody;
+    public GameObject damageTextPrefab;
     public float speed = 2;
     public float dashMultiplier = 2;
     public float attackDashMultiplier = 2;
@@ -11,6 +15,7 @@ public class Player : Human
     public float fightTimeSeconds = 0.5f;
     private float timeLeftFight = 0;
     private Vector3 inputVectorNormalized;
+    private DialogueTreeController npcDialogue;
     public static Player Instance { get; private set; }
 
     public static Vector3 position => Instance == null ? Vector3.zero : Instance.transform.position;
@@ -29,6 +34,24 @@ public class Player : Human
 
     private void Update()
     {
+        var closest = GameManager
+            .alives
+            .OrderBy(x => x ? Vector3.Distance(x.transform.position, transform.position) : 9999);;
+
+        var available = closest.ToList().Find(x => x && x is Enemy 
+                                                   && Vector3.Distance(x.transform.position, transform.position) < 1);
+
+        if (available is Human human)
+        {
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                Debug.Log("merhaba");
+                npcDialogue = human.GetComponent<DialogueTreeController>();
+                npcDialogue.StartDialogue(npcDialogue);
+            }
+           
+        }
+
         timeLeftFight += Time.deltaTime;
         if (timeLeftFight >= fightTimeSeconds)
         {
@@ -78,7 +101,10 @@ public class Player : Human
 
     private void Fight(Enemy enemy)
     {
-        enemy.Kill();
+        var damage = 23;
+        var go = Instantiate(damageTextPrefab, enemy.transform.position, Quaternion.identity);
+        go.GetComponentInChildren<TMP_Text>().text = damage.ToString();
+        enemy.Damage(damage, enemy.transform.position - transform.position);
     }
 
     public void OnStageNextTrigger(Collider other)
