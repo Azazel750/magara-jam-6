@@ -45,6 +45,8 @@ namespace NodeCanvas.DialogueTrees.UI.Examples
         private Vector2 originalSubsPosition;
         private bool isWaitingChoice;
 
+        public GameObject panel;
+
         private AudioSource _localSource;
         private AudioSource localSource {
             get { return _localSource != null ? _localSource : _localSource = gameObject.AddComponent<AudioSource>(); }
@@ -72,15 +74,13 @@ namespace NodeCanvas.DialogueTrees.UI.Examples
         
         private void Show()
         {
-            gameObject.SetActive(true);
+            panel.SetActive(true);
         }
 
         private void Hide()
         {
-            gameObject.SetActive(false);
+            panel.SetActive(false);
         }
-
-        void OnEnable() { UnSubscribe(); Subscribe(); }
 
         void Subscribe() {
             DialogueTree.OnDialogueStarted += OnDialogueStarted;
@@ -129,7 +129,7 @@ namespace NodeCanvas.DialogueTrees.UI.Examples
         void OnDialogueFinished(DialogueTree dlg) {
             if ( playSource != null ) playSource.Stop();
             StopAllCoroutines();
-            gameObject.SetActive(false);
+            Hide();
         }
 
         ///----------------------------------------------------------------------------------------------

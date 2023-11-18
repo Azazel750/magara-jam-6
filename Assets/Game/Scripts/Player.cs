@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class Player : Human
 {
+    public Animator animator;
     public new Rigidbody rigidbody;
     public bool canMove = true;
     public GameObject actionPanel;
