@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
 
 public class Player : Human
@@ -29,6 +30,20 @@ public class Player : Human
 
     private void Update()
     {
+        var closest = GameManager
+            .alives
+            .OrderBy(x => x is not null ? Vector3.Distance(x.transform.position, transform.position) : 9999);;
+
+        var available = closest.ToList().Find(x => x is Enemy 
+                                                   && Vector3.Distance(x.transform.position, transform.position) < 1);
+
+        if (available)
+        {
+            
+        }
+        
+        
+        
         timeLeftFight += Time.deltaTime;
         if (timeLeftFight >= fightTimeSeconds)
         {

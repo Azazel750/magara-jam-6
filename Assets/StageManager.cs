@@ -6,6 +6,7 @@ public class StageManager : Singleton<StageManager>
     private int index = 0;
     public void SetStage(int stageNumber)
     {
+        /*
         var next = stageNumber > index;
         if (stageNumber >= transform.childCount) stageNumber = transform.childCount - 1;
         if (stageNumber < 0) stageNumber = 0;
@@ -14,7 +15,7 @@ public class StageManager : Singleton<StageManager>
         var pos = Player.Instance.transform.position;
         var n = (next ? GameCamera.Instance.nextSpawn : GameCamera.Instance.backSpawn).position;
         pos.z = n.z;
-        Player.Instance.transform.position = pos;
+        Player.Instance.transform.position = pos;*/
     }
 
 

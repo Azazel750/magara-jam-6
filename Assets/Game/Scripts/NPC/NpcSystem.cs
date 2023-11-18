@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using TMPro;
 using UnityEngine;
@@ -15,16 +16,16 @@ public class NpcSystem : MonoBehaviour
     private int index;
     private bool Playerisclose;
     public GameObject conButton;
-    public void OnTriggerEnter(Collision other)
+    public void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Player")
+        if (other.CompareTag("Player"))
         {
             Playerisclose= true;
         }
     }
-    public void OnTriggerExite(Collision other)
+    public void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag == "Player")
+        if (other.CompareTag("Player"))
         {
             Playerisclose = false;
             ZeroText();
@@ -33,6 +34,8 @@ public class NpcSystem : MonoBehaviour
 
     private void Update()
     {
+
+
         who.text = gameObject.name;
         if(Input.GetKeyUp(KeyCode.F))
         {
