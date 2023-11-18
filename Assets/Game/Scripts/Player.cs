@@ -45,8 +45,9 @@ public class Player : Human
         {
             if (Input.GetKeyDown(KeyCode.F))
             {
+                Debug.Log("merhaba");
                 npcDialogue = human.GetComponent<DialogueTreeController>();
-                npcDialogue.StartDialogue();
+                npcDialogue.StartDialogue(npcDialogue);
             }
            
         }
