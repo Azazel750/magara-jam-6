@@ -17,6 +17,11 @@ public class Enemy : Alive
     {
         _stateManager = new StateManager(this);
         _stateManager.Begin<IdleState>();
+
+        OnHealthChanged += (last, next) =>
+        {
+            if(next <= 0) 
+        };
     }
 
     void OnEnable () {
@@ -46,5 +51,10 @@ public class Enemy : Alive
     public void Kill()
     {
         Destroy(gameObject);
+    }
+
+    public void Damage(int damage)
+    {
+        Health -= damage;
     }
 }

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class Player : Human
 {
     public new Rigidbody rigidbody;
+    public GameObject damageTextPrefab;
     public float speed = 2;
     public float dashMultiplier = 2;
     public float attackDashMultiplier = 2;
@@ -32,18 +34,16 @@ public class Player : Human
     {
         var closest = GameManager
             .alives
-            .OrderBy(x => x is not null ? Vector3.Distance(x.transform.position, transform.position) : 9999);;
+            .OrderBy(x => x ? Vector3.Distance(x.transform.position, transform.position) : 9999);;
 
-        var available = closest.ToList().Find(x => x is Enemy 
+        var available = closest.ToList().Find(x => x && x is Enemy 
                                                    && Vector3.Distance(x.transform.position, transform.position) < 1);
 
-        if (available)
+        if (available is Human human)
         {
             
         }
-        
-        
-        
+
         timeLeftFight += Time.deltaTime;
         if (timeLeftFight >= fightTimeSeconds)
         {
@@ -93,7 +93,10 @@ public class Player : Human
 
     private void Fight(Enemy enemy)
     {
-        enemy.Kill();
+        var damage = 23;
+        var go = Instantiate(damageTextPrefab, enemy.transform.position, Quaternion.identity);
+        go.GetComponentInChildren<TMP_Text>().text = damage.ToString();
+        enemy.Damage(damage);
     }
 
     public void OnStageNextTrigger(Collider other)
