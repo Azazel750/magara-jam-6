@@ -537,7 +537,10 @@ MonoBehaviour:
   textMesh: {fileID: 97802141}
   length: 10
   keyList: "qwertyu\u0131opasdfghjklizxcvbnm"
+<<<<<<< Updated upstream
   keyCodeList: 
+=======
+>>>>>>> Stashed changes
 --- !u!114 &1234434813
 MonoBehaviour:
   m_ObjectHideFlags: 0

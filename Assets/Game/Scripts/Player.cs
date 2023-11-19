@@ -4,10 +4,15 @@ using System.Linq;
 using NOK;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class Player : Human
 {
+    public Image timeScaleImage;
+    public Volume volume;
     public Animator animator;
     public new Rigidbody rigidbody;
     public bool canMove = true;
@@ -37,6 +42,8 @@ public class Player : Human
     private Vector3 moveVelocity;
     public bool isFighting;
 
+    public float scaleTime = 5f;
+
     private void Update()
     {
 
@@ -46,6 +53,23 @@ public class Player : Human
             actionPanel.SetActive(false);
             return;
         }
+
+        if (scaleTime < 5) scaleTime += Time.deltaTime / 2;
+
+        timeScaleImage.fillAmount = scaleTime / 5f;
+        
+        if (volume.profile.TryGet<ColorAdjustments>(out var jan))
+        {
+            var onTimeSlow = Input.GetMouseButton(1) && scaleTime > 0;
+            if (onTimeSlow)
+            {
+                scaleTime -= Time.unscaledDeltaTime;
+            }
+            jan.hueShift.value = Mathf.Lerp(jan.hueShift.value, 
+                onTimeSlow ? 145 : 0, Time.deltaTime * 15);
+            Time.timeScale = 1 / (jan.hueShift.value / 50 + 1);
+        }
+
         var closest = GameManager
             .alives
             .OrderBy(x => x ? Vector3.Distance(x.transform.position, transform.position) : 9999);;
@@ -56,7 +80,7 @@ public class Player : Human
         if (available is Alive human)
         {
             npcDialogue = human.GetComponent<DialogueTreeController>();
-            if (npcDialogue.graph.primeNode != null)
+            if (npcDialogue && npcDialogue.graph.primeNode != null)
             {
                 actionPanel.SetActive(true);
                 if (Input.GetKeyDown(KeyCode.F))
@@ -88,8 +112,8 @@ public class Player : Human
             FightMode(true);
         }
         
-        var horizontal = Input.GetAxis("Horizontal");
-        var vertical = Input.GetAxis("Vertical");
+        var horizontal = Input.GetAxisRaw("Horizontal");
+        var vertical = Input.GetAxisRaw("Vertical");
         inputVectorNormalized = 
             Vector3.SmoothDamp(inputVectorNormalized, new Vector3(horizontal, 0, vertical).normalized, ref moveVelocity, moveDirectionSmoothTime);
         

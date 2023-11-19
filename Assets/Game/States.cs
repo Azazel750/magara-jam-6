@@ -33,7 +33,7 @@ namespace AOC
         public bool isMainState;
         public float timeLeft { get; set; }
         public StateManager stateManager { get; set; }
-        public Alive agent { get; set; }
+        public MonoBehaviour agent { get; set; }
         public State mainState { get; set; }
         public abstract void Awake();
         public abstract IEnumerator Start();
@@ -93,14 +93,14 @@ namespace AOC
         public State CurrentState { get; private set; }
         public State mainState { get; private set; }
         private FinishAction _finishAction;
-        public Alive agent { get; private set; }
+        public MonoBehaviour agent { get; private set; }
         private readonly List<State> statePool = new List<State>();
         
         private bool isStarted, isDisposed;
 
         private Coroutine lastStartCoroutine;
 
-        public StateManager(Alive agent)
+        public StateManager(MonoBehaviour agent)
         {
             this.agent = agent;
             Debug.Log("1" + agent);

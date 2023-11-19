@@ -11,7 +11,6 @@ public class Healthbar : MonoBehaviour
     {
         Player.Instance.OnHealthChanged += (lastHealth, newHealth) => 
         {
-            Debug.Log("Health: " + newHealth);
             healthbar.fillAmount = Mathf.Clamp(newHealth / maxHealth, 0, 1);
         
         };
