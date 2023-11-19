@@ -200,6 +200,7 @@ MonoBehaviour:
   rb: {fileID: 5810752804802106889}
   speed: 0.1
   direction: {x: 0, y: 0, z: 0}
+  target: {fileID: 0}
   damageForceMultiplier: 3
 --- !u!54 &5810752804802106889
 Rigidbody:

@@ -86,9 +86,12 @@ public class Player : Human
                 if (Input.GetKeyDown(KeyCode.F))
                 {
                     canMove = false;
+                    Physics.autoSimulation = false;
                     npcDialogue.StartDialogue(npcDialogue, b =>
                     {
                         canMove = true;
+                        Physics.autoSimulation = true;
+                        
                     });
                 }
             }

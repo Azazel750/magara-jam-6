@@ -147,8 +147,8 @@ namespace NodeCanvas.DialogueTrees.UI.Examples
 
             actorName.text = actor.name;
             actorSpeech.color = actor.dialogueColor;
-            
-            info.Continue();
+
+             info.Continue(); 
 
             if ( audio != null ) {
                 var actorSource = actor.transform != null ? actor.transform.GetComponent<AudioSource>() : null;
@@ -206,7 +206,7 @@ namespace NodeCanvas.DialogueTrees.UI.Examples
                 }
             }
 
-            yield return null;
+            yield return new WaitForSeconds(1); 
             
         }
 
