@@ -11,7 +11,7 @@ public class Enemy : Alive
     public Rigidbody rb;
     public float speed = 0.1f;
     [HideInInspector] public Vector3 direction;
-    private Transform target;
+    public Transform target;
     IAstarAI ai;
     private StateManager _stateManager;
 
@@ -34,9 +34,9 @@ public class Enemy : Alive
 
     void OnEnable () {
         ai = GetComponent<IAstarAI>();
-        target = GameManager.GetClosest<Human>(this).transform;
+        if(!target) target = GameManager.GetClosest<Human>(this).transform;
         
-        if (ai != null) ai.onSearchPath += Update;
+        if (ai != null) ai.onSearchPath += FixedUpdate;
     }
 
     private void OnCollisionStay(Collision other)
@@ -60,11 +60,10 @@ public class Enemy : Alive
     }
 
     /// <summary>Updates the AI's destination every frame</summary>
-    void Update ()
+    void FixedUpdate ()
     {
         if(direction.magnitude > 0.1f) rb.velocity = direction.normalized * speed;
         direction = Vector3.zero;
-
     }
 
     public void MakeForward(Vector3 currentWaypointVector)
