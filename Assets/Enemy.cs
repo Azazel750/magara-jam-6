@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using AOC;
 using Enemy_States;
 using Pathfinding;
@@ -26,13 +27,22 @@ public class Enemy : Alive
             if (next <= 0) Die();
         };
     }
-
+    
+    public Animator animator;
     private void Die()
     {
+        StartCoroutine(DieCoroutine());
+    }
+
+    private IEnumerator DieCoroutine()
+    {
+        animator.Play("Death");
+        yield return new WaitForSeconds(3);
         Destroy(gameObject);
     }
 
-    void OnEnable () {
+    void OnEnable () 
+    {
         ai = GetComponent<IAstarAI>();
         if(!target) target = GameManager.GetClosest<Human>(this).transform;
         
@@ -71,11 +81,6 @@ public class Enemy : Alive
         direction = currentWaypointVector;
     }
 
-    public void Kill()
-    {
-        Destroy(gameObject);
-    }
-    
     public float damageForceMultiplier;
 
     public void Damage(int damage, Vector3 damageDirection)

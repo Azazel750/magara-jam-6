@@ -11,6 +11,7 @@ using Random = UnityEngine.Random;
 
 public class Player : Human
 {
+    public TrailRenderer trailRenderer;
     public Image timeScaleImage;
     public Volume volume;
     public Animator animator;
@@ -46,6 +47,7 @@ public class Player : Human
 
     private void Update()
     {
+        trailRenderer.enabled = isFighting;
 
         if (!canMove)
         {
@@ -86,9 +88,12 @@ public class Player : Human
                 if (Input.GetKeyDown(KeyCode.F))
                 {
                     canMove = false;
+                    Physics.autoSimulation = false;
                     npcDialogue.StartDialogue(npcDialogue, b =>
                     {
                         canMove = true;
+                        Physics.autoSimulation = true;
+                        
                     });
                 }
             }
