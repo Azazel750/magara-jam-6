@@ -1,8 +1,10 @@
 ﻿using NodeCanvas.DialogueTrees;
 using System;
 using System.Linq;
+using NOK;
 using TMPro;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Player : Human
 {
@@ -77,12 +79,19 @@ public class Player : Human
             FightMode(false);
         }
 
-        if (Input.GetMouseButtonDown(0)) FightMode(true);
+        if (Input.GetMouseButtonDown(0) && !isFighting) 
+        {
+            animator.ResetTrigger("Attack1");
+            animator.ResetTrigger("Attack2");
+            animator.SetTrigger(Collections.RandomText("Attack1", "Attack2"));
+
+            FightMode(true);
+        }
         
         var horizontal = Input.GetAxis("Horizontal");
         var vertical = Input.GetAxis("Vertical");
-        inputVectorNormalized = Vector3.SmoothDamp(inputVectorNormalized, 
-            new Vector3(horizontal, 0, vertical).normalized, ref moveVelocity, moveDirectionSmoothTime);
+        inputVectorNormalized = 
+            Vector3.SmoothDamp(inputVectorNormalized, new Vector3(horizontal, 0, vertical).normalized, ref moveVelocity, moveDirectionSmoothTime);
         
         if(inputVectorNormalized.magnitude > 0.1f) transform.rotation = Quaternion.Lerp(transform.rotation, 
             Quaternion.LookRotation(rigidbody.velocity), 
@@ -117,7 +126,8 @@ public class Player : Human
     {
         animator.SetFloat("Speed", 
             Mathf.MoveTowards(animator.GetFloat("Speed"), direction.magnitude > 0.1f ? 1 : 0, Time.deltaTime * 6));
-        rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, direction * speed, Time.fixedDeltaTime * velocitySmoothTime);
+        rigidbody.velocity = 
+            Vector3.Lerp(rigidbody.velocity, direction * speed, Time.fixedDeltaTime * velocitySmoothTime);
     }
 
     public void Fight(Collider other)
@@ -127,10 +137,8 @@ public class Player : Human
 
     private void Fight(Enemy enemy)
     {
-        var damage = 23;
-        var go = Instantiate(damageTextPrefab, enemy.transform.position, Quaternion.identity);
-        go.GetComponentInChildren<TMP_Text>().text = damage.ToString();
-        enemy.Damage(damage, enemy.transform.position - transform.position);
+        //var damage = 23;
+        //enemy.Damage(damage, enemy.transform.position - transform.position);
     }
 
     public void OnStageNextTrigger(Collider other)
@@ -147,5 +155,27 @@ public class Player : Human
     {
         Debug.Log("WOooa");
         Health -= enemyDamage;
+    }
+
+    bool AnimatorHasAnimations(params string[] animationNames)
+    {
+        // Check if the Animator Controller has the specified animations
+        foreach (var clipInfo in animator.runtimeAnimatorController.animationClips)
+        {
+            foreach (var animationName in animationNames)
+            {
+                if (clipInfo.name == animationName)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    bool AnimatorHasAnimation(string animationName)
+    {
+        // Check if the Animator Controller has the specified animation
+        return AnimatorHasAnimations(animationName);
     }
 }

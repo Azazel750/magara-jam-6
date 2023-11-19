@@ -2,6 +2,7 @@ using System;
 using AOC;
 using Enemy_States;
 using Pathfinding;
+using TMPro;
 using UnityEngine;
 
 public class Enemy : Alive
@@ -21,6 +22,7 @@ public class Enemy : Alive
 
         OnHealthChanged += (last, next) =>
         {
+            Debug.Log("WOA");
             if (next <= 0) Die();
         };
     }
@@ -79,6 +81,10 @@ public class Enemy : Alive
 
     public void Damage(int damage, Vector3 damageDirection)
     {
+        var go = Instantiate(GameReferenceHolder.Instance.damageTextPrefab, 
+            transform.position, 
+            Quaternion.identity);
+        go.GetComponentInChildren<TMP_Text>().text = damage.ToString();
         Health -= damage;
         rb.AddForce(damageDirection * damageForceMultiplier, ForceMode.Impulse);
     }
