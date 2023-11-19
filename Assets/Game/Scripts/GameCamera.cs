@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
 using AOC;
-using DG.Tweening;
-using Ra.Trail;
 using UnityEngine;
 
 public class GameCamera : Singleton<GameCamera>

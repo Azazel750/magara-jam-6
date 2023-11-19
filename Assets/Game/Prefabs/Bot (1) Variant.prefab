@@ -122,6 +122,16 @@ PrefabInstance:
       propertyPath: animator
       value: 
       objectReference: {fileID: 2997717621293619320}
+    - target: {fileID: 8880061441451223816, guid: 7be645feea875be48a40872474fcfc29,
+        type: 3}
+      propertyPath: meshObject
+      value: 
+      objectReference: {fileID: 8372741683714922680}
+    - target: {fileID: 8880061441451223816, guid: 7be645feea875be48a40872474fcfc29,
+        type: 3}
+      propertyPath: damageForceMultiplier
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 9120324915485032671, guid: 7be645feea875be48a40872474fcfc29,
         type: 3}
       propertyPath: m_TagString
@@ -437,6 +447,12 @@ PrefabInstance:
 --- !u!95 &2997717621293619320 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 02fc2bdb57bd90c469f0d7f12357d275,
+    type: 3}
+  m_PrefabInstance: {fileID: 8714638876068685289}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8372741683714922680 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 02fc2bdb57bd90c469f0d7f12357d275,
     type: 3}
   m_PrefabInstance: {fileID: 8714638876068685289}
   m_PrefabAsset: {fileID: 0}

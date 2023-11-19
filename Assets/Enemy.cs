@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using AOC;
 using Enemy_States;
+using NodeCanvas.Tasks.Actions;
 using Pathfinding;
 using TMPro;
 using UnityEngine;
 
 public class Enemy : Alive
 {
+    public GameObject meshObject;
     public float enemyDamage = 10;
     public Rigidbody rb;
     public float speed = 0.1f;
@@ -34,11 +36,16 @@ public class Enemy : Alive
         StartCoroutine(DieCoroutine());
     }
 
+    private bool dead = false;
     private IEnumerator DieCoroutine()
     {
         animator.Play("Death");
-        yield return new WaitForSeconds(3);
+        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+        dead = true;
+        _stateManager.Dispose();
+        meshObject.transform.SetParent(null);
         Destroy(gameObject);
+        yield break;
     }
 
     void OnEnable () 
@@ -72,6 +79,7 @@ public class Enemy : Alive
     /// <summary>Updates the AI's destination every frame</summary>
     void FixedUpdate ()
     {
+        if (dead) return;
         if(direction.magnitude > 0.1f) rb.velocity = direction.normalized * speed;
         direction = Vector3.zero;
     }

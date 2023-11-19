@@ -2203,7 +2203,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &571054177
 Transform:
   m_ObjectHideFlags: 0
@@ -2227,7 +2227,7 @@ TrailRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 571054176}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -2261,7 +2261,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 0.2
+  m_Time: 0.15
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -2283,8 +2283,8 @@ TrailRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 1, b: 1, a: 0.5176471}
-      key1: {r: 1, g: 1, b: 1, a: 0.13725491}
+      key0: {r: 1, g: 1, b: 1, a: 0.24313726}
+      key1: {r: 1, g: 1, b: 1, a: 0.011764706}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0.3803922}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -2300,7 +2300,7 @@ TrailRenderer:
       ctime6: 0
       ctime7: 0
       atime0: 0
-      atime1: 20239
+      atime1: 5975
       atime2: 65535
       atime3: 65535
       atime4: 0
@@ -2318,7 +2318,7 @@ TrailRenderer:
     textureScale: {x: 1, y: 1}
     shadowBias: 0.5
     generateLightingData: 0
-  m_MinVertexDistance: 0.1
+  m_MinVertexDistance: 1
   m_MaskInteraction: 0
   m_Autodestruct: 0
   m_Emitting: 1
@@ -5197,6 +5197,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e02e45ea62c4fc39799c7b3199c086e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trailRenderer: {fileID: 571054178}
   timeScaleImage: {fileID: 814478117}
   volume: {fileID: 602121692}
   animator: {fileID: 1994504420}
@@ -6545,7 +6546,7 @@ MonoBehaviour:
   - {fileID: 1715785244}
   - {fileID: 1632913769}
   initialSpawnInterval: 1
-  enemiesPerStage: 14000000140000001400000019000000
+  enemiesPerStage: 6400000096000000c80000002c010000
   timeBetweenStages: 5
 --- !u!4 &1665565141
 Transform:
